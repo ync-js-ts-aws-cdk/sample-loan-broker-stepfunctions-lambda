@@ -1,0 +1,48 @@
+{
+  "version": "34.0.0",
+  "files": {
+    "91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e": {
+      "source": {
+        "path": "asset.91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f": {
+      "source": {
+        "path": "asset.41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "70a003c9ed0765d1a7bb4cd0d360336b982863a73291153cc24c6eab5ac1067c": {
+      "source": {
+        "path": "LoanBroker-RecipientList-Stack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "70a003c9ed0765d1a7bb4cd0d360336b982863a73291153cc24c6eab5ac1067c.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

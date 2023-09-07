@@ -105,6 +105,12 @@ Replace `<STATE_MACHINE_ARN>` with the `LoanBroker-RecipientList-Stack.LoanBroke
 }
 ```
 
+ install any application/packages with brew on mac
+
+```undefined
+brew install jq
+```
+
 You can use the Execution ARN to see the output of the State Machine execution:
 
 ```sh

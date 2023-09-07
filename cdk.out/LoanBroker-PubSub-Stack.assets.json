@@ -1,0 +1,76 @@
+{
+  "version": "34.0.0",
+  "files": {
+    "91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e": {
+      "source": {
+        "path": "asset.91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f": {
+      "source": {
+        "path": "asset.41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "ffdfec39e5d07de31072b9f5c5f0a8b30dc107e561ad00f6a63cada13dfeb407": {
+      "source": {
+        "path": "/Users/yongnan/codes/aws/localstack/sample-loan-broker-stepfunctions-lambda",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "ffdfec39e5d07de31072b9f5c5f0a8b30dc107e561ad00f6a63cada13dfeb407.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "91920599dd97b2c7cb046a1512871171d7f4cc7f3602d9d74d7b904f09dcf725": {
+      "source": {
+        "path": "/Users/yongnan/codes/aws/localstack/sample-loan-broker-stepfunctions-lambda",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "91920599dd97b2c7cb046a1512871171d7f4cc7f3602d9d74d7b904f09dcf725.zip",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    },
+    "1c7280ba3549ce15c63126ac3c6384d167f4185d949999df44b76be5882f1003": {
+      "source": {
+        "path": "LoanBroker-PubSub-Stack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "000000000000-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+          "objectKey": "1c7280ba3549ce15c63126ac3c6384d167f4185d949999df44b76be5882f1003.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-file-publishing-role-000000000000-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

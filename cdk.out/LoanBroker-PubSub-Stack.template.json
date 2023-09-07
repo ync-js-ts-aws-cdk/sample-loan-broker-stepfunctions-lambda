@@ -1,0 +1,1382 @@
+{
+ "Resources": {
+  "CreditBureauLambdaServiceRole5747B731": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/CreditBureauLambda/ServiceRole/Resource"
+   }
+  },
+  "CreditBureauLambda41F5F0B1": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e.zip"
+    },
+    "FunctionName": "CreditBureauLambda-PubSub",
+    "Handler": "app.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CreditBureauLambdaServiceRole5747B731",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "CreditBureauLambdaServiceRole5747B731"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/CreditBureauLambda/Resource",
+    "aws:asset:path": "asset.91c09932b8621ab537605841e04c0bcb24b73edc5e4745239e5e871aea46368e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "MortgageQuotesEventBus988D4B69": {
+   "Type": "AWS::Events::EventBus",
+   "Properties": {
+    "Name": "MortgageQuotesEventBus"
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/MortgageQuotesEventBus/Resource"
+   }
+  },
+  "MortgageQuotesQueue151F7E59": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 300,
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/MortgageQuotesQueue/Resource"
+   }
+  },
+  "MortgageQuotesQueuePolicyCE7524E1": {
+   "Type": "AWS::SQS::QueuePolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl"
+       ],
+       "Condition": {
+        "ArnEquals": {
+         "aws:SourceArn": {
+          "Fn::GetAtt": [
+           "FilterMortgageQuotesRuleFC9F3DB0",
+           "Arn"
+          ]
+         }
+        }
+       },
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "events.amazonaws.com"
+       },
+       "Resource": {
+        "Fn::GetAtt": [
+         "MortgageQuotesQueue151F7E59",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Queues": [
+     {
+      "Ref": "MortgageQuotesQueue151F7E59"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/MortgageQuotesQueue/Policy/Resource"
+   }
+  },
+  "FilterMortgageQuotesRuleFC9F3DB0": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "EventBusName": {
+     "Ref": "MortgageQuotesEventBus988D4B69"
+    },
+    "EventPattern": {
+     "detail": {
+      "responsePayload": {
+       "bankId": [
+        {
+         "exists": true
+        }
+       ]
+      }
+     }
+    },
+    "Name": "FilterMortgageQuotesRule",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Fn::GetAtt": [
+        "MortgageQuotesQueue151F7E59",
+        "Arn"
+       ]
+      },
+      "Id": "Target0",
+      "InputPath": "$.detail.responsePayload"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/FilterMortgageQuotesRule/Resource"
+   }
+  },
+  "BankRecipientPawnshopServiceRoleE0BACF1B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/ServiceRole/Resource"
+   }
+  },
+  "BankRecipientPawnshopServiceRoleDefaultPolicy74DDCD38": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "events:PutEvents",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "MortgageQuotesEventBus988D4B69",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BankRecipientPawnshopServiceRoleDefaultPolicy74DDCD38",
+    "Roles": [
+     {
+      "Ref": "BankRecipientPawnshopServiceRoleE0BACF1B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "BankRecipientPawnshopE3B8CC03": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BANK_ID": "PawnShop",
+      "BASE_RATE": "5",
+      "MAX_LOAN_AMOUNT": "500000",
+      "MIN_CREDIT_SCORE": "400"
+     }
+    },
+    "FunctionName": "BankRecipientPawnshop-PubSub",
+    "Handler": "app-sns.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BankRecipientPawnshopServiceRoleE0BACF1B",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "BankRecipientPawnshopServiceRoleDefaultPolicy74DDCD38",
+    "BankRecipientPawnshopServiceRoleE0BACF1B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/Resource",
+    "aws:asset:path": "asset.41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BankRecipientPawnshopEventInvokeConfig4E6FA26F": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "DestinationConfig": {
+     "OnSuccess": {
+      "Destination": {
+       "Fn::GetAtt": [
+        "MortgageQuotesEventBus988D4B69",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "FunctionName": {
+     "Ref": "BankRecipientPawnshopE3B8CC03"
+    },
+    "Qualifier": "$LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/EventInvokeConfig/Resource"
+   }
+  },
+  "BankRecipientPawnshopAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF048673CE02": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "BankRecipientPawnshopE3B8CC03",
+      "Arn"
+     ]
+    },
+    "Principal": "sns.amazonaws.com",
+    "SourceArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04"
+   }
+  },
+  "BankRecipientPawnshopMortgageQuoteRequest3201114A": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "BankRecipientPawnshopE3B8CC03",
+      "Arn"
+     ]
+    },
+    "Protocol": "lambda",
+    "TopicArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPawnshop/MortgageQuoteRequest/Resource"
+   }
+  },
+  "BankRecipientUniversalServiceRoleD0A4869D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/ServiceRole/Resource"
+   }
+  },
+  "BankRecipientUniversalServiceRoleDefaultPolicyBCCE0475": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "events:PutEvents",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "MortgageQuotesEventBus988D4B69",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BankRecipientUniversalServiceRoleDefaultPolicyBCCE0475",
+    "Roles": [
+     {
+      "Ref": "BankRecipientUniversalServiceRoleD0A4869D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "BankRecipientUniversal8F27A740": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BANK_ID": "Universal",
+      "BASE_RATE": "4",
+      "MAX_LOAN_AMOUNT": "700000",
+      "MIN_CREDIT_SCORE": "500"
+     }
+    },
+    "FunctionName": "BankRecipientUniversal-PubSub",
+    "Handler": "app-sns.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BankRecipientUniversalServiceRoleD0A4869D",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "BankRecipientUniversalServiceRoleDefaultPolicyBCCE0475",
+    "BankRecipientUniversalServiceRoleD0A4869D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/Resource",
+    "aws:asset:path": "asset.41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BankRecipientUniversalEventInvokeConfigA80DE1BA": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "DestinationConfig": {
+     "OnSuccess": {
+      "Destination": {
+       "Fn::GetAtt": [
+        "MortgageQuotesEventBus988D4B69",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "FunctionName": {
+     "Ref": "BankRecipientUniversal8F27A740"
+    },
+    "Qualifier": "$LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/EventInvokeConfig/Resource"
+   }
+  },
+  "BankRecipientUniversalAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF04BE99D7C6": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "BankRecipientUniversal8F27A740",
+      "Arn"
+     ]
+    },
+    "Principal": "sns.amazonaws.com",
+    "SourceArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04"
+   }
+  },
+  "BankRecipientUniversalMortgageQuoteRequest6A9CE40F": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "BankRecipientUniversal8F27A740",
+      "Arn"
+     ]
+    },
+    "Protocol": "lambda",
+    "TopicArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientUniversal/MortgageQuoteRequest/Resource"
+   }
+  },
+  "BankRecipientPremiumServiceRole4E49E640": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/ServiceRole/Resource"
+   }
+  },
+  "BankRecipientPremiumServiceRoleDefaultPolicyED84E12E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "events:PutEvents",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "MortgageQuotesEventBus988D4B69",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BankRecipientPremiumServiceRoleDefaultPolicyED84E12E",
+    "Roles": [
+     {
+      "Ref": "BankRecipientPremiumServiceRole4E49E640"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "BankRecipientPremium36050019": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "BANK_ID": "Premium",
+      "BASE_RATE": "3",
+      "MAX_LOAN_AMOUNT": "900000",
+      "MIN_CREDIT_SCORE": "600"
+     }
+    },
+    "FunctionName": "BankRecipientPremium-PubSub",
+    "Handler": "app-sns.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "BankRecipientPremiumServiceRole4E49E640",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "BankRecipientPremiumServiceRoleDefaultPolicyED84E12E",
+    "BankRecipientPremiumServiceRole4E49E640"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/Resource",
+    "aws:asset:path": "asset.41beebfe8481a686e14547d6d0408dc8c04d6c24c1e3c311bd2de71b6d2e5e0f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "BankRecipientPremiumEventInvokeConfig7C089A59": {
+   "Type": "AWS::Lambda::EventInvokeConfig",
+   "Properties": {
+    "DestinationConfig": {
+     "OnSuccess": {
+      "Destination": {
+       "Fn::GetAtt": [
+        "MortgageQuotesEventBus988D4B69",
+        "Arn"
+       ]
+      }
+     }
+    },
+    "FunctionName": {
+     "Ref": "BankRecipientPremium36050019"
+    },
+    "Qualifier": "$LATEST"
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/EventInvokeConfig/Resource"
+   }
+  },
+  "BankRecipientPremiumAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF04F845F241": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "BankRecipientPremium36050019",
+      "Arn"
+     ]
+    },
+    "Principal": "sns.amazonaws.com",
+    "SourceArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04"
+   }
+  },
+  "BankRecipientPremiumMortgageQuoteRequest81DFA6EF": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": {
+     "Fn::GetAtt": [
+      "BankRecipientPremium36050019",
+      "Arn"
+     ]
+    },
+    "Protocol": "lambda",
+    "TopicArn": {
+     "Ref": "MortgageQuoteRequest17A42CE5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/BankRecipientPremium/MortgageQuoteRequest/Resource"
+   }
+  },
+  "MortgageQuoteRequest17A42CE5": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "DisplayName": "MortgageQuoteRequest topic",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/MortgageQuoteRequest/Resource"
+   }
+  },
+  "MortgageQuotesTable8359B799": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "Id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "Id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "MortgageQuotesTable",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/MortgageQuotesTable/Resource"
+   }
+  },
+  "QuoteAggregatorLambdaServiceRole4110CC92": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/QuoteAggregatorLambda/ServiceRole/Resource"
+   }
+  },
+  "QuoteAggregatorLambdaServiceRoleDefaultPolicy1F68965D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:ChangeMessageVisibility",
+        "sqs:GetQueueUrl",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "MortgageQuotesQueue151F7E59",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MortgageQuotesTable8359B799",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "states:SendTaskSuccess",
+        "states:SendTaskFailure",
+        "states:SendTaskHeartbeat"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "LoanBroker641FC9A8"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "QuoteAggregatorLambdaServiceRoleDefaultPolicy1F68965D",
+    "Roles": [
+     {
+      "Ref": "QuoteAggregatorLambdaServiceRole4110CC92"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/QuoteAggregatorLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "QuoteAggregatorLambda3D75D0E2": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "ffdfec39e5d07de31072b9f5c5f0a8b30dc107e561ad00f6a63cada13dfeb407.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "MORTGAGE_QUOTES_TABLE": {
+       "Ref": "MortgageQuotesTable8359B799"
+      },
+      "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+     }
+    },
+    "FunctionName": "QuoteAggregator",
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "QuoteAggregatorLambdaServiceRole4110CC92",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "QuoteAggregatorLambdaServiceRoleDefaultPolicy1F68965D",
+    "QuoteAggregatorLambdaServiceRole4110CC92"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/QuoteAggregatorLambda/Resource",
+    "aws:asset:path": "/Users/yongnan/codes/aws/localstack/sample-loan-broker-stepfunctions-lambda",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "QuoteAggregatorLambdaSqsEventSourceLoanBrokerPubSubStackMortgageQuotesQueue5CA3E2D73EA1FFD5": {
+   "Type": "AWS::Lambda::EventSourceMapping",
+   "Properties": {
+    "BatchSize": 10,
+    "EventSourceArn": {
+     "Fn::GetAtt": [
+      "MortgageQuotesQueue151F7E59",
+      "Arn"
+     ]
+    },
+    "FunctionName": {
+     "Ref": "QuoteAggregatorLambda3D75D0E2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/QuoteAggregatorLambda/SqsEventSource:LoanBrokerPubSubStackMortgageQuotesQueue5CA3E2D7/Resource"
+   }
+  },
+  "GetMortgageQuotesLambdaServiceRole11C41615": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/ServiceRole/Resource"
+   }
+  },
+  "GetMortgageQuotesLambdaServiceRoleDefaultPolicy7252B6F1": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MortgageQuotesTable8359B799",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "GetMortgageQuotesLambdaServiceRoleDefaultPolicy7252B6F1",
+    "Roles": [
+     {
+      "Ref": "GetMortgageQuotesLambdaServiceRole11C41615"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "GetMortgageQuotesLambda412B292B": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-000000000000-ap-northeast-1",
+     "S3Key": "91920599dd97b2c7cb046a1512871171d7f4cc7f3602d9d74d7b904f09dcf725.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "MORTGAGE_QUOTES_TABLE": {
+       "Ref": "MortgageQuotesTable8359B799"
+      },
+      "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+     }
+    },
+    "FunctionName": "QuoteRequester",
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "GetMortgageQuotesLambdaServiceRole11C41615",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "DependsOn": [
+    "GetMortgageQuotesLambdaServiceRoleDefaultPolicy7252B6F1",
+    "GetMortgageQuotesLambdaServiceRole11C41615"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/Resource",
+    "aws:asset:path": "/Users/yongnan/codes/aws/localstack/sample-loan-broker-stepfunctions-lambda",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "LoanBrokerLogGroup0AC7392D": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 731,
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/LoanBrokerLogGroup/Resource"
+   }
+  },
+  "LoanBrokerRole70979761": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.ap-northeast-1.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/LoanBroker/Role/Resource"
+   }
+  },
+  "LoanBrokerRoleDefaultPolicy4FA71B4B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogDelivery",
+        "logs:GetLogDelivery",
+        "logs:UpdateLogDelivery",
+        "logs:DeleteLogDelivery",
+        "logs:ListLogDeliveries",
+        "logs:PutResourcePolicy",
+        "logs:DescribeResourcePolicies",
+        "logs:DescribeLogGroups"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords",
+        "xray:GetSamplingRules",
+        "xray:GetSamplingTargets"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CreditBureauLambda41F5F0B1",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "CreditBureauLambda41F5F0B1",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "sns:Publish",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "MortgageQuoteRequest17A42CE5"
+       }
+      },
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GetMortgageQuotesLambda412B292B",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GetMortgageQuotesLambda412B292B",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LoanBrokerRoleDefaultPolicy4FA71B4B",
+    "Roles": [
+     {
+      "Ref": "LoanBrokerRole70979761"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/LoanBroker/Role/DefaultPolicy/Resource"
+   }
+  },
+  "LoanBroker641FC9A8": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"Get Credit Score from credit bureau\",\"States\":{\"Get Credit Score from credit bureau\":{\"Next\":\"Request mortgage quotes from all banks\",\"Type\":\"Task\",\"ResultPath\":\"$.Credit\",\"ResultSelector\":{\"Score.$\":\"$.Payload.body.score\",\"History.$\":\"$.Payload.body.history\"},\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "CreditBureauLambda41F5F0B1",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"SSN.$\":\"$.SSN\",\"RequestId.$\":\"$$.Execution.Id\"}}},\"Request mortgage quotes from all banks\":{\"End\":true,\"Catch\":[{\"ErrorEquals\":[\"States.Timeout\"],\"ResultPath\":\"$.Error\",\"Next\":\"Get Mortgage Quotes\"}],\"Type\":\"Task\",\"TimeoutSeconds\":5,\"ResultPath\":\"$.Quotes\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::sns:publish.waitForTaskToken\",\"Parameters\":{\"TopicArn\":\"",
+       {
+        "Ref": "MortgageQuoteRequest17A42CE5"
+       },
+       "\",\"Message\":{\"taskToken.$\":\"$$.Task.Token\",\"input.$\":\"$\",\"context.$\":\"$$\"}}},\"Get Mortgage Quotes\":{\"Next\":\"Transform Mortgage Quotes Response\",\"Type\":\"Task\",\"ResultPath\":\"$.result\",\"ResultSelector\":{\"Quotes.$\":\"$.Payload.quotes\"},\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
+       {
+        "Fn::GetAtt": [
+         "GetMortgageQuotesLambda412B292B",
+         "Arn"
+        ]
+       },
+       "\",\"Payload\":{\"Id.$\":\"$$.Execution.Id\"}}},\"Transform Mortgage Quotes Response\":{\"Type\":\"Pass\",\"Parameters\":{\"SSN.$\":\"$.SSN\",\"Amount.$\":\"$.Amount\",\"Term.$\":\"$.Term\",\"Credit.$\":\"$.Credit\",\"Quotes.$\":\"$.result.Quotes\"},\"End\":true}},\"TimeoutSeconds\":300}"
+      ]
+     ]
+    },
+    "LoggingConfiguration": {
+     "Destinations": [
+      {
+       "CloudWatchLogsLogGroup": {
+        "LogGroupArn": {
+         "Fn::GetAtt": [
+          "LoanBrokerLogGroup0AC7392D",
+          "Arn"
+         ]
+        }
+       }
+      }
+     ],
+     "IncludeExecutionData": true,
+     "Level": "ALL"
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "LoanBrokerRole70979761",
+      "Arn"
+     ]
+    },
+    "StateMachineType": "STANDARD",
+    "Tags": [
+     {
+      "Key": "Project",
+      "Value": "AWS CDK Loan Broker"
+     },
+     {
+      "Key": "Stackname",
+      "Value": "LoanBroker-PubSub-Stack"
+     }
+    ],
+    "TracingConfiguration": {
+     "Enabled": true
+    }
+   },
+   "DependsOn": [
+    "LoanBrokerRoleDefaultPolicy4FA71B4B",
+    "LoanBrokerRole70979761"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/LoanBroker/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21STU/DMAz9LdyzwAAhOLIJEBIfpd29StOsy9omoU6Gpir/HSftuk3apX52np0Xv97Sp3t6c8X+YMbLetbIgvaZZbwmWMr7hrVFyWj/6hS3UiuyXKsJv+yEsu9qp2ux1Gotq3B6sZiIrpUAU1OmXcfFJzNGqmPXWdUTyVrap7oRgRBjohvJ93FgRJ7AXc4AhAX6HALmdOF4LeyCgSBghVmPaiG3DGqg/Ud80qCQZAoSVzQSNp6IoAEJUcvCwaQr4NSNOjDitb/I+3HCxdoA4veo8CRFvkJ+5grgnTSHPZ7lK20kD9UIPCn3irW6RDdWrBiujsCTwZJc6VJsgX7FMFly9mLaJ7gcgnZa3CrfSBXnnOY4TldhKbp667Qz4fyAvSepgOgJidvFxmr069tZ42xcyEjxJCiiW7jezR/p/AF/qi1IOeucsrIVNB3iP7UsLcZwAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "LoanBroker-PubSub-Stack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "LoanBrokerArn": {
+   "Value": {
+    "Ref": "LoanBroker641FC9A8"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

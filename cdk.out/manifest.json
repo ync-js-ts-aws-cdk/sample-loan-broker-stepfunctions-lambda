@@ -1,0 +1,483 @@
+{
+  "version": "34.0.0",
+  "artifacts": {
+    "LoanBroker-RecipientList-Stack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "LoanBroker-RecipientList-Stack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "LoanBroker-RecipientList-Stack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://000000000000/ap-northeast-1",
+      "properties": {
+        "templateFile": "LoanBroker-RecipientList-Stack.template.json",
+        "tags": {
+          "Project": "AWS CDK Loan Broker",
+          "Stackname": "LoanBroker-RecipientList-Stack"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-deploy-role-000000000000-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-cfn-exec-role-000000000000-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-000000000000-ap-northeast-1/70a003c9ed0765d1a7bb4cd0d360336b982863a73291153cc24c6eab5ac1067c.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "LoanBroker-RecipientList-Stack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-lookup-role-000000000000-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "LoanBroker-RecipientList-Stack.assets"
+      ],
+      "metadata": {
+        "/LoanBroker-RecipientList-Stack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Project",
+                "Value": "AWS CDK Loan Broker"
+              },
+              {
+                "Key": "Stackname",
+                "Value": "LoanBroker-RecipientList-Stack"
+              }
+            ]
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/CreditBureauLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreditBureauLambdaServiceRole5747B731"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/CreditBureauLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreditBureauLambda41F5F0B1"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBrokerBanksTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "LoanBrokerBanksTableB671E6A0"
+            }
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBrokerBanksTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerBanksTableB671E6A0"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBrokerLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerLogGroup0AC7392D"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBroker/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerRole70979761"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBroker/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerRoleDefaultPolicy4FA71B4B"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBroker/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBroker641FC9A8"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientPawnshop/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopServiceRoleE0BACF1B"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientPawnshop/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopE3B8CC03"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientUniversal/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalServiceRoleD0A4869D"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientUniversal/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversal8F27A740"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientPremium/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumServiceRole4E49E640"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BankRecipientPremium/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremium36050019"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/LoanBrokerArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerArn"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/LoanBroker-RecipientList-Stack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "LoanBroker-RecipientList-Stack"
+    },
+    "LoanBroker-PubSub-Stack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "LoanBroker-PubSub-Stack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "LoanBroker-PubSub-Stack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://000000000000/ap-northeast-1",
+      "properties": {
+        "templateFile": "LoanBroker-PubSub-Stack.template.json",
+        "tags": {
+          "Project": "AWS CDK Loan Broker",
+          "Stackname": "LoanBroker-PubSub-Stack"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-deploy-role-000000000000-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-cfn-exec-role-000000000000-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-000000000000-ap-northeast-1/1c7280ba3549ce15c63126ac3c6384d167f4185d949999df44b76be5882f1003.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "LoanBroker-PubSub-Stack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::000000000000:role/cdk-hnb659fds-lookup-role-000000000000-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "LoanBroker-PubSub-Stack.assets"
+      ],
+      "metadata": {
+        "/LoanBroker-PubSub-Stack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Project",
+                "Value": "AWS CDK Loan Broker"
+              },
+              {
+                "Key": "Stackname",
+                "Value": "LoanBroker-PubSub-Stack"
+              }
+            ]
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/CreditBureauLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreditBureauLambdaServiceRole5747B731"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/CreditBureauLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CreditBureauLambda41F5F0B1"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuotesEventBus/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MortgageQuotesEventBus988D4B69"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuotesQueue/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MortgageQuotesQueue151F7E59"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuotesQueue/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MortgageQuotesQueuePolicyCE7524E1"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/FilterMortgageQuotesRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "FilterMortgageQuotesRuleFC9F3DB0"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopServiceRoleE0BACF1B"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopServiceRoleDefaultPolicy74DDCD38"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopE3B8CC03"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopEventInvokeConfig4E6FA26F"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF048673CE02"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPawnshop/MortgageQuoteRequest/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPawnshopMortgageQuoteRequest3201114A"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalServiceRoleD0A4869D"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalServiceRoleDefaultPolicyBCCE0475"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversal8F27A740"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalEventInvokeConfigA80DE1BA"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF04BE99D7C6"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientUniversal/MortgageQuoteRequest/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientUniversalMortgageQuoteRequest6A9CE40F"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumServiceRole4E49E640"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumServiceRoleDefaultPolicyED84E12E"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremium36050019"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/EventInvokeConfig/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumEventInvokeConfig7C089A59"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/AllowInvoke:LoanBrokerPubSubStackMortgageQuoteRequest888DBF04": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumAllowInvokeLoanBrokerPubSubStackMortgageQuoteRequest888DBF04F845F241"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BankRecipientPremium/MortgageQuoteRequest/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BankRecipientPremiumMortgageQuoteRequest81DFA6EF"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuoteRequest/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MortgageQuoteRequest17A42CE5"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuotesTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "MortgageQuotesTable8359B799"
+            }
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/MortgageQuotesTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MortgageQuotesTable8359B799"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/QuoteAggregatorLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuoteAggregatorLambdaServiceRole4110CC92"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/QuoteAggregatorLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuoteAggregatorLambdaServiceRoleDefaultPolicy1F68965D"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/QuoteAggregatorLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuoteAggregatorLambda3D75D0E2"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/QuoteAggregatorLambda/SqsEventSource:LoanBrokerPubSubStackMortgageQuotesQueue5CA3E2D7/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "QuoteAggregatorLambdaSqsEventSourceLoanBrokerPubSubStackMortgageQuotesQueue5CA3E2D73EA1FFD5"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetMortgageQuotesLambdaServiceRole11C41615"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetMortgageQuotesLambdaServiceRoleDefaultPolicy7252B6F1"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/GetMortgageQuotesLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GetMortgageQuotesLambda412B292B"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/LoanBrokerLogGroup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerLogGroup0AC7392D"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/LoanBroker/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerRole70979761"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/LoanBroker/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerRoleDefaultPolicy4FA71B4B"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/LoanBroker/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBroker641FC9A8"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/LoanBrokerArn": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoanBrokerArn"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/LoanBroker-PubSub-Stack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "LoanBroker-PubSub-Stack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
